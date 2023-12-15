@@ -1,0 +1,8 @@
+"define"in window&&define("discourse/theme-43/discourse/pre-initializers/theme-43-translations",["exports"],(function(e){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0}),e.default=void 0
+e.default={name:"theme-43-translations",initialize(){const e={en:{}}
+for(let t in e){let i=I18n.translations
+for(let e of[t,"js","theme_translations"])i=i[e]=i[e]||{}
+i[43]=e[t]}}}}))
+
+//# sourceMappingURL=9b3e6a785256491361b131b9df1cd3a7572c5875.map?__ws=discourse.julialang.org

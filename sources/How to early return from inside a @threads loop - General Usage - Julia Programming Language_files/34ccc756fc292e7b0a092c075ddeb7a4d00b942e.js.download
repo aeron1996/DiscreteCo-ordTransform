@@ -1,0 +1,69 @@
+"require"in window&&require("discourse/lib/theme-settings-store").registerSettings(46,{minimum_trust_level_to_create_TOC:0,composer_toc_text:"This topic will contain a table of contents",table_of_contents_icon:"align-left",anchor_icon:"hashtag",auto_TOC_categories:"",auto_TOC_tags:"",TOC_min_heading:3,theme_uploads:{"icons-sprite":"https://global.discourse-cdn.com/julialang/original/3X/8/0/80ed408554201b1aea5b03b7b3a2ab0b0be0a012.svg"}}),"define"in window&&define("discourse/theme-46/discourse/templates/connectors/after-topic-progress/d-toc-mini",["exports","@ember/template-factory"],(function(e,t){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0}),e.default=void 0
+e.default=(0,t.createTemplateFactory)({id:null,block:'[[[10,0],[14,0,"d-toc-mini"],[12],[1,"\\n  "],[8,[39,0],[[24,0,"btn-primary"]],[["@action","@label"],[[30,0,["showTOCOverlay"]],[28,[37,1],[46,"table_of_contents"],null]]],null],[1,"\\n"],[13]],[],false,["d-button","theme-prefix"]]',moduleName:"discourse/theme-46/discourse/templates/connectors/after-topic-progress/d-toc-mini",isStrictMode:!1})})),"define"in window&&define("discourse/theme-46/discourse/connectors/after-topic-progress/d-toc-mini",["exports","@glimmer/component","@ember/object"],(function(e,t,o){"use strict"
+var i
+Object.defineProperty(e,"__esModule",{value:!0}),e.default=void 0
+require("discourse/lib/theme-settings-store").getObjectForTheme(46)
+e.default=(i=class extends t.default{showTOCOverlay(){document.querySelector(".d-toc-wrapper").classList.toggle("overlay")}},c=i.prototype,r="showTOCOverlay",s=[o.action],n=Object.getOwnPropertyDescriptor(i.prototype,"showTOCOverlay"),a=i.prototype,l={},Object.keys(n).forEach((function(e){l[e]=n[e]})),l.enumerable=!!l.enumerable,l.configurable=!!l.configurable,("value"in l||l.initializer)&&(l.writable=!0),l=s.slice().reverse().reduce((function(e,t){return t(c,r,e)||e}),l),a&&void 0!==l.initializer&&(l.value=l.initializer?l.initializer.call(a):void 0,l.initializer=void 0),void 0===l.initializer&&(Object.defineProperty(c,r,l),l=null),i)
+var c,r,s,n,a,l})),"define"in window&&define("discourse/theme-46/discourse/templates/connectors/below-docs-topic/d-toc-wrapper",["exports","@ember/template-factory"],(function(e,t){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0}),e.default=void 0
+e.default=(0,t.createTemplateFactory)({id:null,block:"[[],[],false,[]]",moduleName:"discourse/theme-46/discourse/templates/connectors/below-docs-topic/d-toc-wrapper",isStrictMode:!1})})),"define"in window&&define("discourse/theme-46/discourse/templates/connectors/topic-navigation/d-toc-wrapper",["exports","@ember/template-factory"],(function(e,t){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0}),e.default=void 0
+e.default=(0,t.createTemplateFactory)({id:null,block:"[[],[],false,[]]",moduleName:"discourse/theme-46/discourse/templates/connectors/topic-navigation/d-toc-wrapper",isStrictMode:!1})})),"define"in window&&define("discourse/theme-46/discourse/initializers/disco-toc-composer",["exports","I18n","discourse/lib/plugin-api"],(function(e,t,o){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0}),e.default=void 0
+const i=require("discourse/lib/theme-settings-store").getObjectForTheme(46)
+e.default={name:"disco-toc-composer",initialize(){(0,o.withPluginApi)("1.0.0",(e=>{const o=e.getCurrentUser()
+if(!o)return
+const c=i.minimum_trust_level_to_create_TOC
+var r
+o.trust_level>=c&&(t.default.translations[t.default.currentLocale()].js.composer||(t.default.translations[t.default.currentLocale()].js.composer={}),t.default.translations[t.default.currentLocale()].js.composer.contains_dtoc=" ",e.addComposerToolbarPopupMenuOption({action:e=>{e.applySurround('<div data-theme-toc="true">',"</div>","contains_dtoc")},icon:"align-left",label:(r="insert_table_of_contents",`theme_translations.46.${r}`),condition:e=>e.model.topicFirstPost}))}))}}})),"define"in window&&define("discourse/theme-46/discourse/initializers/disco-toc-main",["exports","discourse-common/utils/dom-utils","discourse/lib/offset-calculator","discourse-common/lib/icon-library","@ember/runloop","discourse/lib/utilities","discourse/lib/plugin-api","I18n"],(function(e,t,o,i,c,r,s,n){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0}),e.default=void 0
+const a=require("discourse/lib/theme-settings-store").getObjectForTheme(46)
+e.default={name:"disco-toc-main",initialize(){(0,s.withPluginApi)("1.0.0",(e=>{const t=a.auto_TOC_categories.split("|").map((e=>parseInt(e,10))),o=a.auto_TOC_tags.split("|")
+e.decorateCookedElement(((e,i)=>{if(i){const s=i.getModel()
+if(1!==s?.post_number)return
+const n=i.getModel().topic.category_id,l=i.getModel().topic.tags,d=e?.querySelector('[data-theme-toc="true"]'),u=t?.includes(n),m=l?.some((e=>o?.includes(e)))
+if(!d&&!u&&!m)return void document.body.classList.remove("d-toc-timeline-visible")
+let p=":scope > h1, :scope > h2, :scope > h3, :scope > h4, :scope > h5"
+const f=e.querySelectorAll(p)
+if(f.length<a.TOC_min_heading)return
+f.forEach(((e,t)=>{const o=(0,r.slugify)(e.textContent)||t,i=e.getAttribute("id")||(0,r.slugify)(`toc-${e.nodeName}-${o}`)
+e.setAttribute("id",i),e.setAttribute("data-d-toc",i),e.classList.add("d-toc-post-heading")})),e.classList.add("d-toc-cooked"),document.querySelector(".d-toc-wrapper")?this.insertTOC(f):(0,c.later)((()=>{document.querySelector(".d-toc-wrapper")&&this.insertTOC(f)}),300)}}),{id:"disco-toc",onlyStream:!0,afterAdopt:!0}),e.onAppEvent("topic:current-post-changed",(e=>{document.querySelector(".d-toc-cooked")&&(1===e.post.post_number?document.body.classList.add("d-toc-timeline-visible"):document.body.classList.remove("d-toc-timeline-visible"))})),e.onAppEvent("docs-topic:current-post-scrolled",(()=>{this.updateTOCSidebar()})),e.onAppEvent("topic:current-post-scrolled",(e=>{1===e.postIndex&&this.updateTOCSidebar()})),e.cleanupStream((()=>{document.body.classList.remove("d-toc-timeline-visible"),document.removeEventListener("click",this.clickTOC,!1)}))}))},updateTOCSidebar(){if(!document.querySelector(".d-toc-cooked"))return
+const e=document.querySelectorAll(".d-toc-post-heading")
+let i=null,c=null
+if(e.forEach((e=>{const r=Math.abs(t.default.offset(e).top-(0,o.headerOffset)()-window.scrollY)
+if(!(null==i||r<i))return!1
+i=r,c=e})),c){document.querySelectorAll("#d-toc li").forEach((e=>{e.classList.remove("active"),e.classList.remove("direct-active")}))
+const e=document.querySelector(`#d-toc a[data-d-toc="${c.getAttribute("id")}"]`)
+if(!e)return
+e.parentElement.classList.add("direct-active"),function(e,t,o){const i=[],c=e.matches||e.webkitMatchesSelector||e.mozMatchesSelector||e.msMatchesSelector
+e=e.parentElement
+for(;e&&!c.call(e,t);)o?c.call(e,o)&&i.push(e):i.push(e),e=e.parentElement
+return i}(e,"#d-toc",".d-toc-item").forEach((e=>{e.classList.add("active")}))}},insertTOC(e){const t=document.createElement("div")
+var o
+t.classList.add("d-toc-main"),t.innerHTML=`<div class="d-toc-icons">\n              <a href="#" class="scroll-to-bottom" title="${n.default.t((o="post_bottom_tooltip",`theme_translations.46.${o}`))}">${(0,i.iconHTML)("downward")}</a>\n              <a href="#" class="d-toc-close">${(0,i.iconHTML)("times")}</a></div>`
+const c=document.querySelector(".d-toc-wrapper .d-toc-main")
+c?document.querySelector(".d-toc-wrapper").replaceChild(t,c):document.querySelector(".d-toc-wrapper").appendChild(t)
+const r=this.buildTOC(Array.from(e))
+document.querySelector(".d-toc-main").appendChild(r),document.addEventListener("click",this.clickTOC,!1)},clickTOC(e){if(["d-toc-timeline-visible","archetype-docs-topic"].some((e=>document.body.classList.contains(e)))){if(e.target.closest(".d-toc-item")&&e.target.hasAttribute("data-d-toc")){const i=`#${e.target.getAttribute("data-d-toc")}`,c=t.default.offset(document.querySelector(`.d-toc-cooked ${i}`)).top
+return window.scrollTo({top:c-(0,o.headerOffset)()-10,behavior:"smooth"}),document.querySelector(".d-toc-wrapper").classList.remove("overlay"),e.preventDefault(),!1}if(e.target.closest("a")){if(e.target.closest("a").classList.contains("scroll-to-bottom")){const t=document.querySelector(".d-toc-cooked").getBoundingClientRect()
+if(t)return window.scrollTo({top:t.bottom+window.scrollY-(0,o.headerOffset)()-10,behavior:"smooth"}),e.preventDefault(),!1}if(e.target.closest("a").classList.contains("d-toc-close"))return document.querySelector(".d-toc-wrapper").classList.remove("overlay"),e.preventDefault(),!1}document.querySelector(".d-toc-wrapper.overlay")&&(e.target.closest(".d-toc-wrapper.overlay")||document.querySelector(".d-toc-wrapper").classList.remove("overlay"))}},buildTOC(e){const t=document.createElement("div")
+t.setAttribute("id","d-toc")
+const o=e[0].tagName,i=e.filter((e=>e.tagName===o))
+let c=e.length
+return i.forEach(((o,r)=>{const s=document.createElement("ul")
+s.classList.add("d-toc-heading")
+let n=this.buildItem(o)
+s.appendChild(n)
+const a=e.indexOf(o)
+c=i[r+1]?e.indexOf(i[r+1]):e.length,e.forEach(((e,t)=>{if(t>a&&t<c){let t=n.lastChild
+"UL"!==t.tagName&&(t=t.appendChild(document.createElement("ul")),t.classList.add("d-toc-sublevel"),n.appendChild(t))
+let o=this.buildItem(e)
+t.appendChild(o)}})),t.appendChild(s)})),t},buildItem(e){let t=e.cloneNode(!0)
+t.querySelector("span.clicks")?.remove()
+const o=document.createElement("li")
+o.classList.add("d-toc-item"),o.classList.add(`d-toc-${t.tagName.toLowerCase()}`)
+const i=t.getAttribute("id")
+return o.innerHTML=`<a href="#" data-d-toc="${i}"></a>`,o.querySelector("a").innerText=t.textContent.trim(),t.remove(),o}}}))
+
+//# sourceMappingURL=34ccc756fc292e7b0a092c075ddeb7a4d00b942e.map?__ws=discourse.julialang.org

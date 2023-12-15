@@ -1,0 +1,52 @@
+define("discourse/plugins/discourse-math/initializers/discourse-math-katex",["exports","discourse/lib/plugin-api","discourse/lib/load-script"],(function(e,t,a){"use strict"
+function i(e){if(!e||!e.find)return
+const t=e.find(".math")
+t.length>0&&(0,a.default)("/plugins/discourse-math/katex/katex.min.js").then((()=>(0,a.default)("/plugins/discourse-math/katex/katex.min.css",{css:!0}).then((()=>(0,a.default)("/plugins/discourse-math/katex/mhchem.min.js"))).then((()=>(0,a.default)("/plugins/discourse-math/katex/copy-tex.min.js"))))).then((()=>{const e={trust:e=>["\\htmlId","\\href"].includes(e.command),macros:{"\\eqref":"\\href{###1}{(\\text{#1})}","\\ref":"\\href{###1}{\\text{#1}}","\\label":"\\htmlId{#1}{}"},displayMode:!1}
+t.each(((t,a)=>function(e,t){const a=$(e)
+if(t.displayMode="DIV"===e.tagName,!a.data("applied-katex")&&(a.data("applied-katex",!0),a.hasClass("math"))){const i="div"==("DIV"===e.tagName?"div":"span")?"block-math":"inline-math",s=a.text()
+a.addClass(`math-container ${i} katex-math`).text(""),window.katex.render(s,e,t)}}(a,e)))}))}Object.defineProperty(e,"__esModule",{value:!0}),e.default=void 0
+e.default={name:"apply-math-katex",initialize(e){const a=e.lookup("site-settings:main")
+a.discourse_math_enabled&&"katex"===a.discourse_math_provider&&(0,t.withPluginApi)("0.5",(function(e){(function(e){e.decorateCooked((function(e){i(e)}),{id:"katex"})})(e)}))}}})),define("discourse/plugins/discourse-math/initializers/discourse-math-mathjax",["exports","discourse/lib/plugin-api","discourse-common/lib/get-url","discourse/lib/load-script","@ember/runloop"],(function(e,t,a,i,s){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0}),e.default=void 0
+let n=!1
+function r(e){return function(e){if(n)return
+const t=["toMathML.js","Safe.js"]
+e.enable_accessibility&&t.push("[a11y]/accessibility-menu.js")
+let i={jax:["input/TeX","input/AsciiMath","input/MathML","output/CommonHTML"],TeX:{extensions:["AMSmath.js","AMSsymbols.js","autoload-all.js"]},extensions:t,showProcessingMessages:!1,root:(0,a.getURLWithCDN)("/plugins/discourse-math/mathjax")}
+e.zoom_on_hover&&(i.menuSettings={zoom:"Hover"},i.MathEvents={hover:750}),window.MathJax=i,n=!0}(e),(0,i.default)("/plugins/discourse-math/mathjax/MathJax.2.7.5.js")}function o(e,t){if(!e)return
+let a
+if(a=t.enable_asciimath?e.querySelectorAll(".math, .asciimath"):e.querySelectorAll(".math"),a.length>0){const i=e.classList.contains("d-editor-preview")
+r(t).then((()=>{a.forEach((e=>function(e,t){if(e.dataset.appliedMathjax)return
+let a,i,n
+e.dataset.appliedMathjax=!0,e.classList.contains("math")?(a="DIV"===e.tagName?"div":"span",n="math/tex"+("div"===a?"; mode=display":""),i=`math-container ${"div"===a?"block-math":"inline-math"} mathjax-math`):e.classList.contains("asciimath")&&(a="span",i="math-container inline-math ascii-math",n="math/asciimath")
+const r=document.createElement("script")
+r.type=n,r.innerText=e.innerText
+const o=document.createElement(a)
+o.classList.add(i.split(" ")),o.style.display="none",o.appendChild(r),e.after(o),(0,s.later)(this,(()=>{window.MathJax.Hub.Queue((()=>{null!==e?.parentElement?.offsetParent&&window.MathJax.Hub.Typeset(r,(()=>{e.style.display="none",o.style.display=null}))}))}),t?200:0)}(e,i)))}))}}e.default={name:"apply-math-mathjax",initialize(e){const a=e.lookup("site-settings:main")
+let i={zoom_on_hover:a.discourse_math_zoom_on_hover,enable_accessibility:a.discourse_math_enable_accessibility,enable_asciimath:a.discourse_math_enable_asciimath}
+a.discourse_math_enabled&&"mathjax"===a.discourse_math_provider&&(0,t.withPluginApi)("0.5",(function(e){(function(e,t){e.decorateCookedElement((e=>{o(e,t)}),{id:"mathjax"}),e.decorateChatMessage&&e.decorateChatMessage((e=>{o(e,t)}),{id:"mathjax-chat"})})(e,i)}))}}})),define("discourse/plugins/discourse-math/lib/discourse-markdown/discourse-math",["exports"],(function(e){"use strict"
+function t(e,t,a){return e!==t&&(!!a.utils.isWhiteSpace(e)||(!!a.utils.isMdAsciiPunct(e)||!!a.utils.isPunctChar(e)))}function a(e,a,i){let s,n=e.pos,r=e.posMax
+if(a||e.src.charCodeAt(n)!==i||r<n+2)return!1
+if(e.src.charCodeAt(n+1)===i)return!1
+if(n>0){if(!t(e.src.charCodeAt(n-1),i,e.md))return!1}for(let t=n+1;t<r;t++){if(e.src.charCodeAt(t)===i&&92!==e.src.charCodeAt(t-1)){s=t
+break}}if(!s)return!1
+if(s+1<=r){let a=e.src.charCodeAt(s+1)
+if(a&&!t(a,i,e.md))return!1}let o=e.src.slice(n+1,s),c=e.push("html_raw","",0)
+const u=e.md.utils.escapeHtml(o)
+let l=36===i?"'math'":"'asciimath'"
+return c.content=`<span class=${l}>${u}</span>`,e.pos=s+1,!0}function i(e,t){return a(e,t,36)}function s(e,t){return a(e,t,37)}function n(e,t,a,i){if(36!==e.src.charCodeAt(t))return!1
+if(t++,36!==e.src.charCodeAt(t))return!1
+for(let s=++t;s<a;s++)if(!i.utils.isSpace(e.src.charCodeAt(s)))return!1
+return!0}function r(e,t,a,i){if(!n(e,e.bMarks[t]+e.tShift[t],e.eMarks[t],e.md))return!1
+if(i)return!0
+let s=t,r=!1
+for(;s++,!(s>=a);)if(n(e,e.bMarks[s]+e.tShift[s],e.eMarks[s],e.md)){r=!0
+break}let o=e.push("html_raw","",0),c=r?e.eMarks[s-1]:e.eMarks[s],u=e.src.slice(e.bMarks[t+1]+e.tShift[t+1],c)
+const l=e.md.utils.escapeHtml(u)
+return o.content=`<div class='math'>\n${l}\n</div>\n`,e.line=r?s+1:s,!0}Object.defineProperty(e,"__esModule",{value:!0}),e.setup=function(e){if(!e.markdownIt)return
+e.registerOptions(((e,t)=>{e.features.math=t.discourse_math_enabled,e.features.asciimath=t.discourse_math_enable_asciimath})),e.registerPlugin((e=>{e.options.discourse.features.math&&(e.options.discourse.features.asciimath&&e.inline.ruler.after("escape","asciimath",s),e.inline.ruler.after("escape","math",i),e.block.ruler.after("code","math",r,{alt:["paragraph","reference","blockquote","list"]}))}))}}))
+
+//# sourceMappingURL=discourse-math-ae7d5e133778280c002a2b1708c8b519e4f2ea466fada36ac16a7255aca7050b.map
+//!
+
+;

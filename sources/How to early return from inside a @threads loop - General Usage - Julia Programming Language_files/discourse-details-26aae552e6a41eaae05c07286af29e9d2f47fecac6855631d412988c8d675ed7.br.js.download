@@ -1,0 +1,11 @@
+define("discourse/plugins/discourse-details/initializers/apply-details",["exports","discourse/lib/plugin-api","discourse-i18n"],(function(e,i,t){"use strict"
+function s(e){e.decorateCooked((e=>$("details",e)),{id:"discourse-details"}),e.addComposerToolbarPopupMenuOption({action:function(e){e.applySurround(`\n[details="${t.default.t("composer.details_title")}"]\n`,"\n[/details]\n","details_text",{multiline:!1})},icon:"caret-right",label:"details.title"})}Object.defineProperty(e,"__esModule",{value:!0}),e.default=void 0
+e.default={name:"apply-details",initialize(){(0,i.withPluginApi)("1.14.0",s)}}})),define("discourse/plugins/discourse-details/lib/discourse-markdown/details",["exports"],(function(e){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0}),e.setup=function(e){e.allowList(["summary","summary[title]","details","details[open]","details.elided"]),e.registerPlugin((e=>{e.block.bbcode.ruler.push("details",i)}))}
+const i={tag:"details",before(e,i){const t=i.attrs
+e.push("bbcode_open","details",1),e.push("bbcode_open","summary",1),e.push("text","",0).content=t._default||"",e.push("bbcode_close","summary",-1)},after(e){e.push("bbcode_close","details",-1)}}}))
+
+//# sourceMappingURL=discourse-details-3bcb762a4014730e212c73ac676253f7d537b993f2c19e81483fd3da3a9fd44c.map
+//!
+
+;

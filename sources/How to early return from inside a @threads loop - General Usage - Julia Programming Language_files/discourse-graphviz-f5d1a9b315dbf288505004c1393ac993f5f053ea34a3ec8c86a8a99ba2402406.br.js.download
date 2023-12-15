@@ -1,0 +1,19 @@
+define("discourse/plugins/discourse-graphviz/discourse-markdown/discourse-graphviz",["exports"],(function(e){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0}),e.setup=function(e){if(!e.markdownIt)return
+e.allowList(["div.graphviz","div.graphviz.is-loading","div.graphviz-svg"]),e.registerOptions(((e,i)=>{e.features.graphviz=i.discourse_graphviz_enabled})),e.registerPlugin((e=>{e.options.discourse.features.graphviz&&e.block.bbcode.ruler.push("graphviz",{tag:"graphviz",replace(e,i,s){const r=e.push("html_raw","",0),t=e.md.utils.escapeHtml(s),a=e.md.utils.escapeHtml(i.attrs.engine),n=["dot","neato","circo","fdp","osage","twopi"].includes(a)?`data-engine='${a}'`:"data-engine='dot'"
+let d=""
+return"true"===i.attrs.svg?d=" graphviz-svg":"false"===i.attrs.svg&&(d=" graphviz-no-svg"),r.content=`<div class="graphviz is-loading${d}" ${n}>\n${t}\n</div>\n`,!0}})}))}})),define("discourse/plugins/discourse-graphviz/initializers/discourse-graphviz",["exports","discourse/lib/plugin-api","discourse/lib/load-script","pretty-text/sanitizer","@ember/runloop"],(function(e,i,s,r,t){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0}),e.default=void 0
+e.default={name:"discourse-graphviz",renderGraphs(e){e.each(((e,i)=>{const s=$(i)
+s.find("svg").length||this.renderGraph(s)}))},renderGraph(e){const i=e.text().trim(),t=e.attr("data-engine"),a=$("<div class='spinner tiny'></div>")
+e.html(a),(0,s.default)("/plugins/discourse-graphviz/javascripts/viz-3.0.1.js").then((()=>{e.removeClass("is-loading")
+try{const s=vizRenderStringSync(i,{format:"svg",engine:t})
+e.html(s)}catch(s){const i=$(`<div class='graph-error'>${(0,r.escape)(s.message)}</div>`)
+e.html(i)}}))},initialize(e){if(e.lookup("site-settings:main").discourse_graphviz_enabled){let e=t.debounce
+try{e=require("discourse-common/lib/debounce").default}catch(s){}(0,i.withPluginApi)("0.8.22",(i=>{i.decorateCooked((i=>{const s=i.find(".graphviz")
+s.length&&e(this,this.renderGraphs,s,200)}),{id:"graphviz"})}))}}}}))
+
+//# sourceMappingURL=discourse-graphviz-1509027fd3ff7326d6a643e335e9a5664491792159f3c543f62157f3ce844c4b.map
+//!
+
+;

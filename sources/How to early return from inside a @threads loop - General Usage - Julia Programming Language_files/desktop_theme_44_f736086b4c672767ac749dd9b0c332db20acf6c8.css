@@ -1,0 +1,3 @@
+.wiki .topic-body .cooked{background-color:var(--primary-very-low, #f8f8f8) !important;animation:none}.shared-edits-post .topic-body .cooked{background-color:var(--tertiary-very-low, #e0f5ff) !important;animation:none}.post-info.edits .wiki::before{content:"Wiki Post";margin-right:5px;font-weight:bold}.shared-edits-post .post-info.edits .widget-button::before{content:"Shared Edits";margin-right:5px;font-weight:bold;color:var(--danger, #c80001)}
+
+/*# sourceMappingURL=desktop_theme_44_f736086b4c672767ac749dd9b0c332db20acf6c8.css.map?__ws=discourse.julialang.org */
